@@ -4,12 +4,12 @@ This plugin contain a single PartModule to prevent control surfaces from working
 
 Use:
 
-	MODULE
-	{
-		name = ModuleDeployableCtrlSrf
-		DeployModuleIndex = 0 //Index of module implementing IScalarModule
-		DeployModulePos = 1 //Position (0 or 1) of animation considered deployed. Part spawns at 0.
-	}
+MODULE
+{
+	name = ModuleDeployableCtrlSrf
+	DeployModuleIndex = 0 //Index of module implementing IScalarModule
+	DeployModulePos = 1 //Position (0 or 1) of animation considered deployed. Part spawns at 0.
+}
 
 License:
 This plugin is released into the Public Domain.
