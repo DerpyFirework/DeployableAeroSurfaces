@@ -1,6 +1,6 @@
-Deployable Control Surface Plugin for Kerbal Space Program 1.1.2 by DerpyFirework
+Deployable Control Surface Plugin for Kerbal Space Program 1.1.3 by DerpyFirework
 
-This plugin contain a single PartModule to prevent control surfaces from working based on an animation state or any other module implementing IScalarModule. This plugin applies to ALL ModuleControlSurface and ModuleAeroSurface on the part.
+This plugin contain a single PartModule to shield the part from airflow based on an animation state or any other module implementing IScalarModule.
 
 Use:
 
