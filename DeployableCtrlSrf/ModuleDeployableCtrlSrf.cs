@@ -8,46 +8,85 @@ namespace DeployableCtrlSrf
 {
     public class ModuleDeployableCtrlSrf:PartModule
     {
-        //Index of IScalarModule
+        //Index of ModuleAnimateGeneric (Or other module implementing IScalarModule)
         [KSPField]
-        public int DeployModuleIndex = 0;
+        public int DeployModuleIndex;
 
-        //Deployed Position of the IScalarModule
+        //Position of deploy module
         [KSPField]
-        public int DeployModulePos = 1;
+        public int DeployModulePos;
 
-        public bool isDeployed = true;
+        //Variables for tracking values
+        public bool isActive = false;
+        private IScalarModule DeployModule;
+        private ModuleAeroSurface AeroSurfaceModule;
+        private ModuleControlSurface ControlSurfaceModule;
+        private float aeroSrfRange;
+        private float aeroSrfLift;
+        private float ctrlSrfRange;
+        private float ctrlSrfLift;
 
-        //The IScalarModule
-        private IScalarModule DeployModule
+
+        //Initial set up of the values
+        public override void OnStart(StartState state)
         {
-            get
+            base.OnStart(state);
+            AeroSurfaceModule = part.FindModuleImplementing<ModuleAeroSurface>();
+            ControlSurfaceModule = part.FindModuleImplementing<ModuleControlSurface>();
+            DeployModule = part.Modules[DeployModuleIndex] as IScalarModule;
+
+            //Gets the values from the modules
+            if (AeroSurfaceModule != null)
             {
-                return this.part.Modules[DeployModuleIndex] as IScalarModule;
+                aeroSrfRange = AeroSurfaceModule.ctrlSurfaceRange;
+                aeroSrfLift = AeroSurfaceModule.deflectionLiftCoeff;
+            }
+            if (ControlSurfaceModule != null)
+            {
+                ctrlSrfRange = ControlSurfaceModule.ctrlSurfaceRange;
+                ctrlSrfLift = ControlSurfaceModule.deflectionLiftCoeff;
             }
         }
 
-        //Check deployment each frame (Is there a better way?)
-        public override void OnFixedUpdate()
+        public void FixedUpdate()
         {
-            base.OnFixedUpdate();
-            if (isDeployed != (DeployModule.GetScalar == DeployModulePos))
-                ToggleDeployment();
-        }
-
-        //Deployment controller
-        private void ToggleDeployment()
-        {
-            if (!isDeployed)
-            {
-                this.part.ShieldedFromAirstream = false;
-                isDeployed = true;
-            }
+            //Keep checking the deployment state
+            if (DeployModule.GetScalar == DeployModulePos)
+                enableSurface();
             else
+                disableSurface();
+        }
+
+        public void disableSurface()
+        {
+            //Disable the aero surfaces
+            if (AeroSurfaceModule != null)
             {
-                this.part.ShieldedFromAirstream = true;
-                isDeployed = false;
+                AeroSurfaceModule.ctrlSurfaceRange = 0.01f;
+                AeroSurfaceModule.deflectionLiftCoeff = 0.01f;
             }
+            if (ControlSurfaceModule != null)
+            {
+                ControlSurfaceModule.ctrlSurfaceRange = 0.01f;
+                ControlSurfaceModule.deflectionLiftCoeff = 0.01f;
+            }
+            isActive = false;
+        }
+
+        public void enableSurface()
+        {
+            //Enable the aero surfaces
+            if (AeroSurfaceModule != null)
+            {
+                AeroSurfaceModule.ctrlSurfaceRange = aeroSrfRange;
+                AeroSurfaceModule.deflectionLiftCoeff = aeroSrfLift;
+            }
+            if (ControlSurfaceModule != null)
+            {
+                ControlSurfaceModule.ctrlSurfaceRange = ctrlSrfRange;
+                ControlSurfaceModule.deflectionLiftCoeff = ctrlSrfLift;
+            }
+            isActive = true;
         }
     }
 }
