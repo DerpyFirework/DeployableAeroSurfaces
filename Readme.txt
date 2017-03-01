@@ -6,7 +6,7 @@ Use:
 
 MODULE
 {
-	name = ModuleDeployableCtrlSrf or ModuleDeployableLiftSrf
+	name = ModuleDeployableAero
 	DeployModuleIndex = 0 //Index of module implementing IScalarModule
 	DeployModulePos = 1 //Position (0 or 1) of animation considered deployed. Part spawns at 0.
 }
