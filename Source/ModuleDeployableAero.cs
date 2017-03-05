@@ -15,7 +15,6 @@ namespace DeployableAeroSurfaces
         public int DeployModulePos;
 
         private IScalarModule deployModule;
-        private bool deployed;
         private ModuleLiftingSurface[] surfaces;
         private List<float> lifts = new List<float>();
         private List<float> ranges = new List<float>();
